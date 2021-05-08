@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "nm-profile"
+version = "0.1.0"
+description = "Create network profiles using the NetworkManager CLI"
+authors = ["Conveen <conveen@protonmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+# Black requires Python >=3.6.2, Pylint requires ~=3.6
+python = "~=3.6.2"
+lc-task = "0.2.2"
+
+[tool.poetry.dev-dependencies]
+black = "21.5b0"
+mypy = ">=0.800"
+pylint = ">=2.8"
+pytest = ">6.2.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
