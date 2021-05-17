@@ -86,3 +86,18 @@ pub trait Profile {
     /// Remove network profile.
     fn down(&self);
 }
+
+/// Utility function to run a function continuously until it returns `true`.
+///
+/// Can be used with functions like [wifi_is_connected](trait.Profile.html#method.wifi_is_connected)
+/// to wait for a Wi-Fi connection before performing other steps in a profile.
+pub fn wait_for<F>(predicate: F, sleep_for: Option<u64>) -> crate::error::Result<()>
+where
+    F: Fn() -> crate::error::Result<bool>,
+{
+    let sleep_for = sleep_for.unwrap_or(1);
+    while !predicate()? {
+        std::thread::sleep(std::time::Duration::from_secs(sleep_for));
+    }
+    Ok(())
+}
