@@ -2,9 +2,14 @@
 
 extern crate flexi_logger as logging;
 
+/// CLI entrypoint and glue code.
 mod cli;
+/// Crate-level error and result types.
 mod error;
+/// Trait and utility functions for implementing profiles.
+#[allow(dead_code)]
 mod profile;
+/// Network profiles.
 mod profiles;
 
 use structopt::StructOpt;

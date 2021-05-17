@@ -3,7 +3,7 @@
 use structopt::StructOpt;
 
 use crate::cli::{ProfileAction, ProfileCliDirective};
-use crate::profile::Profile;
+use crate::profile::{self, Profile};
 
 pub struct WiFiProfile {}
 
@@ -13,11 +13,11 @@ impl WiFiProfile {
     }
 }
 
-impl Profile for WiFiProfile {
+impl profile::Profile for WiFiProfile {
     fn up(&self) {
-        if !<Self as Profile>::wifi_is_available().unwrap() {
+        if !profile::wifi_is_available().unwrap() {
             log::info!("Enabling Wi-Fi");
-            <Self as Profile>::run_command(&["nmcli radio wifi on"], None).unwrap();
+            profile::run_command(&["nmcli radio wifi on"], None).unwrap();
         } else {
             log::info!("Wi-Fi is already enabled");
         }
@@ -25,7 +25,7 @@ impl Profile for WiFiProfile {
 
     fn down(&self) {
         log::info!("Disabling Wi-Fi");
-        <Self as Profile>::run_command(&["nmcli radio wifi off"], None).unwrap();
+        profile::run_command(&["nmcli radio wifi off"], None).unwrap();
     }
 }
 
