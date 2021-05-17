@@ -3,7 +3,7 @@
 ## Overview
 
 `nmprofile` is a command line framework for creating executable network profiles via the NetworkManager CLI on [pop\_os!](https://pop.system76.com/).
-All crate documentation is available at (https://conveen.github.io/nmprofile-cli).
+All crate documentation is available at https://conveen.github.io/nmprofile-cli.
 
 ## Recommended Usage
 
