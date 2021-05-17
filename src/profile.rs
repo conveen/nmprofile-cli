@@ -1,5 +1,6 @@
 // Copyright 2021 Conveen
 
+//! Trait and utility functions for implementing profiles.
 
 /// Run an arbitrary command using the provided shell, or Bash by default, and return stdout
 /// and stderr.

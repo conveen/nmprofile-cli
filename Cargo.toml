@@ -1,5 +1,5 @@
 [package]
-name = "nm-profile-cli"
+name = "nmprofile"
 version = "0.1.0"
 authors = ["conveen <conveen@protonmail.com>"]
 edition = "2018"
@@ -9,8 +9,6 @@ flexi_logger = {version = "0.17", default_features = false}
 log = "0.4"
 structopt = {version = "0.3", default_features = false, features = ["suggestions"]}
 thiserror = "1.0"
-toml = "0.5"
 
-[[bin]]
-name = "network"
-path = "src/main.rs"
+[lib]
+name = "libnmprofile"

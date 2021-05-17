@@ -2,19 +2,10 @@
 
 extern crate flexi_logger as logging;
 
-/// CLI entrypoint and glue code.
-mod cli;
-/// Crate-level error and result types.
-mod error;
-/// Trait and utility functions for implementing profiles.
-#[allow(dead_code)]
-mod profile;
-/// Network profiles.
-mod profiles;
-
 use structopt::StructOpt;
 
 /// Logging formatter
+#[doc(hidden)]
 fn log_format(
     w: &mut dyn std::io::Write,
     now: &mut logging::DeferredNow,
@@ -29,11 +20,12 @@ fn log_format(
     )
 }
 
+#[doc(hidden)]
 fn main() {
     logging::Logger::with_env_or_str("info")
         .format(log_format)
         .start()
         .unwrap_or_else(|err| panic!("Failed to initialize logger ({})", err));
 
-    cli::Cli::from_args().run();
+    libnmprofile::cli::Cli::from_args().run();
 }
