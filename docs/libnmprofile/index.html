@@ -1,0 +1,158 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Overview"><meta name="keywords" content="rust, rustlang, rust-lang, libnmprofile"><title>libnmprofile - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../ayu.css" disabled ><script id="default-settings"></script><script src="../storage.js"></script><script src="../crates.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../libnmprofile/index.html'><div class='logo-container rust-logo'><img src='../rust-logo.png' alt='logo'></div></a><p class="location">Crate libnmprofile</p><div class="block version"><p>Version 0.1.0</p></div><div class="sidebar-elems"><a id="all-types" href="all.html"><p>See all libnmprofile's items</p></a><div class="block items"><ul><li><a href="#modules">Modules</a></li></ul></div><p class="location"></p><div id="sidebar-vars" data-name="libnmprofile" data-ty="mod" data-relpath="../"></div></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Crate <a class="mod" href="">libnmprofile</a></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../src/libnmprofile/lib.rs.html#3-173" title="goto source code">[src]</a></span></h1><div class="docblock"><h1 id="overview" class="section-header"><a href="#overview">Overview</a></h1>
+<p>Command line framework for creating and applying executable network profiles via the
+NetworkManager CLI on systems running pop_os!.</p>
+<p><a href="https://pop.system76.com/">pop_os!</a> is an (awesome) operating system created and maintained by System76 (which is also awesome).
+<a href="https://ubuntu.com/core/docs/networkmanager">NetworkManager</a> is a common network management daemon for Linux systems that can
+manage Wi-Fi, ethernet, VPN, and other connection types. The NetworkManager daemon has an
+accompanying CLI, <code>nmcli</code>, for controlling devices and connections from the command line.
+However, NetworkManager and the CLI only support certain VPN types and don’t allow specifying
+running arbitrary commands for setting up connections.  This command line framework offers a
+slightly higher level of abstraction on top of <code>nmcli</code> and allows you to create executable
+network profiles.</p>
+<h1 id="use-cases" class="section-header"><a href="#use-cases">Use Cases</a></h1>
+<p>Why would you want to do this? One example is if you use a VPN provider like NordVPN that has a separate
+command line application for connecting to the service. In that case, you may want to create a
+profile that does the following things:</p>
+<ol>
+<li>Check to see if Wi-Fi is enabled and, if not, enable it.</li>
+<li>Connect to a random NordVPN server in the US.</li>
+<li>Make sure /etc/resolv.conf is configured to use the NordVPN DNS servers.</li>
+</ol>
+<p>Alternatively, you may have multiple VLANs that you connect to via ethernet with different static
+configurations. Whatever the situation, simple or complex, you can write a profile to handle
+it.</p>
+<h1 id="creating-a-profile" class="section-header"><a href="#creating-a-profile">Creating a profile</a></h1>
+<p>There are 5 steps required to create a new profile and expose it on the command line:</p>
+<ol>
+<li>Create a new <a href="profiles/index.html">profiles submodule</a> with a unique name for the
+profile (i.e., <code>profiles/nord_vpn.rs</code>).</li>
+<li>Within that submodule, create a struct that implements the <a href="profile/trait.Profile.html">Profile
+trait</a>’s <code>up</code> and <code>down</code> methods.  These methods are used to
+apply and remove the network profile via the CLI.</li>
+<li>Also create a struct that derives <code>StructOpt</code> and that will serve as the CLI for the
+profile. For example, the profile might take a command line argument for which VPN server to
+connect to. Then, implement the <a href="cli/trait.ProfileCliDirective.html">ProfileCliDirective trait</a>’s <code>run</code> method.
+This struct must be <code>pub</code>.</li>
+<li>Add the new submodule to the <a href="profiles/index.html">profiles module</a> and (optionally) <code>pub use</code>
+the CLI directive struct.</li>
+<li>Integrate the new profile into the main CLI by augmenting the <a href="cli/enum.UpDirective.html">up</a> and <a href="cli/enum.DownDirective.html">down</a> CLI directive enums.</li>
+</ol>
+<h1 id="example-nordvpn-profile" class="section-header"><a href="#example-nordvpn-profile">Example: NordVPN Profile</a></h1><h2 id="create-new-profilesnord_vpn-submodule" class="section-header"><a href="#create-new-profilesnord_vpn-submodule">Create new <code>profiles::nord_vpn</code> submodule.</a></h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="comment">// src/profiles/nord_vpn.rs</span>
+<span class="kw">use</span> <span class="ident">structopt</span>::<span class="ident">StructOpt</span>;
+ 
+<span class="kw">use</span> <span class="ident">libnmprofile</span>::<span class="ident">cli</span>::{<span class="ident">ProfileAction</span>, <span class="ident">ProfileCliDirective</span>};
+<span class="kw">use</span> <span class="ident">libnmprofile</span>::<span class="ident">profile</span>::{<span class="self">self</span>, <span class="ident">Profile</span>};
+<span class="kw">use</span> <span class="ident">libnmprofile</span>::<span class="ident">profiles</span>::<span class="ident">wifi</span>::{<span class="ident">down_wifi</span>, <span class="ident">up_wifi</span>};
+
+<span class="doccomment">/// NordVPN is connected.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nordvpn_is_connected</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">libnmprofile</span>::<span class="ident">error</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> (<span class="ident">nordvpn_status</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">profile</span>::<span class="ident">run_command</span>(
+        <span class="kw-2">&amp;</span>[<span class="string">&quot;nordvpn status | grep Status | awk -F&#39;:&#39; &#39;{ print $2 }&#39; | tr -d &#39; &#39;&quot;</span>],
+        <span class="prelude-val">None</span>,
+    )<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(<span class="ident">nordvpn_status</span>.<span class="ident">to_lowercase</span>() <span class="op">=</span><span class="op">=</span> <span class="string">&quot;connected&quot;</span>.<span class="ident">to_string</span>())
+}
+
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NordVpnProfile</span> {
+    <span class="doccomment">/// VPN server location to connect to.</span>
+    <span class="ident">location</span>: <span class="ident">String</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">NordVpnProfile</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">location</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span> { <span class="ident">location</span>, }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Profile</span> <span class="kw">for</span> <span class="ident">NordVpnProfile</span> {
+    <span class="kw">fn</span> <span class="ident">up</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="comment">// Enable Wi-Fi if it&#39;s not already enabled</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">profile</span>::<span class="ident">ethernet_is_connected</span>().<span class="ident">unwrap</span>() {
+            <span class="ident">up_wifi</span>();
+        }
+
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">nordvpn_is_connected</span>().<span class="ident">unwrap</span>() {
+            <span class="comment">// Connect to NordVPN via CLI, passing in location</span>
+            <span class="kw">let</span> <span class="ident">connect_command</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;nordvpn connect {}&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">location</span>);
+            <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Connecting to NordVPN&quot;</span>);
+            <span class="ident">profile</span>::<span class="ident">run_command</span>(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">connect_command</span>], <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+            <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Connected to NordVPN&quot;</span>);
+        } <span class="kw">else</span> {
+            <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Already connected to NordVPN&quot;</span>);
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">down</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">if</span> <span class="ident">nordvpn_is_connected</span>().<span class="ident">unwrap</span>() {
+            <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Disconnecting from NordVPN&quot;</span>);
+            <span class="ident">profile</span>::<span class="ident">run_command</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;nordvpn disconnect&quot;</span>], <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+            <span class="ident">log</span>::<span class="macro">info</span><span class="macro">!</span>(<span class="string">&quot;Disconnected from NordVPN&quot;</span>);
+        }
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NordVpnProfileDirective</span> {
+    <span class="doccomment">/// Location of VPN servers to connect to</span>
+    <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;&quot;</span>)]</span>
+    <span class="ident">location</span>: <span class="ident">String</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">ProfileCliDirective</span> <span class="kw">for</span> <span class="ident">NordVpnProfileDirective</span> {
+    <span class="kw">fn</span> <span class="ident">run</span> (<span class="self">self</span>, <span class="ident">action</span>: <span class="ident">ProfileAction</span>) {
+        <span class="kw">let</span> <span class="ident">profile</span> <span class="op">=</span> <span class="ident">NordVpnProfile</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">location</span>);
+        <span class="kw">match</span> <span class="ident">action</span> {
+            <span class="ident">ProfileAction</span>::<span class="ident">Up</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">profile</span>.<span class="ident">up</span>(),
+            <span class="ident">ProfileAction</span>::<span class="ident">Down</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">profile</span>.<span class="ident">down</span>(),
+        }
+    }
+}</pre></div>
+<h2 id="add-submodule-to-profiles-module" class="section-header"><a href="#add-submodule-to-profiles-module">Add submodule to <code>profiles</code> module</a></h2>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
+<span class="comment">// src/profiles.rs</span>
+
+<span class="comment">// snip...</span>
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">nord_vpn</span>;
+
+<span class="comment">// snip...</span>
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">nord_vpn</span>::<span class="ident">NordVpnProfileDirective</span>;</pre></div>
+<h2 id="integrate-profile-into-the-main-cli" class="section-header"><a href="#integrate-profile-into-the-main-cli">Integrate profile into the main CLI</a></h2>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
+<span class="comment">// src/cli.rs</span>
+<span class="kw">use</span> <span class="ident">structopt</span>::<span class="ident">StructOpt</span>
+
+<span class="comment">// snip...</span>
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UpDirective</span> {
+    <span class="comment">// over variants...</span>
+    <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;n&quot;</span>, <span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;nordvpn&quot;</span>)]</span>
+    <span class="ident">NordVpn</span>(<span class="kw">crate</span>::<span class="ident">profiles</span>::<span class="ident">NordVpnProfileDirective</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">UpDirective</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="self">self</span>) {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="comment">// other variants...</span>
+            <span class="self">Self</span>::<span class="ident">NordVpn</span>(<span class="ident">d</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">d</span>.<span class="ident">run</span>(<span class="ident">ProfileAction</span>::<span class="ident">Up</span>),
+        }
+    }
+}
+
+<span class="comment">// same for DownDirective</span></pre></div>
+<p>After completing these steps and recompiling the program, the <code>nordvpn</code> profile will be
+available with <code>nmprofile up nordvpn -l &lt;location&gt;</code> and <code>nmprofile down nordvpn</code>.</p>
+</div><h2 id="modules" class="section-header"><a href="#modules">Modules</a></h2>
+<table><tr class="module-item"><td><a class="mod" href="cli/index.html" title="libnmprofile::cli mod">cli</a></td><td class="docblock-short"><p>CLI entrypoint and glue code.</p>
+</td></tr><tr class="module-item"><td><a class="mod" href="error/index.html" title="libnmprofile::error mod">error</a></td><td class="docblock-short"><p>Crate-level error and result types.</p>
+</td></tr><tr class="module-item"><td><a class="mod" href="profile/index.html" title="libnmprofile::profile mod">profile</a></td><td class="docblock-short"><p>Trait and utility functions for implementing profiles.</p>
+</td></tr><tr class="module-item"><td><a class="mod" href="profiles/index.html" title="libnmprofile::profiles mod">profiles</a></td><td class="docblock-short"><p>Network profiles.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="libnmprofile" data-search-js="../search-index.js"></div>
+    <script src="../main.js"></script></body></html>

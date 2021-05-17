@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["down_wifi","Create a new WiFiProfile instance and call `down`."],["up_wifi","Create a new WiFiProfile instance and call `up`."]],"struct":[["WiFiProfile","Wi-Fi radio."],["WiFiProfileDirective","Wi-Fi radio CLI directive."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["DownDirective","`down` directive - remove a network profile."],["ProfileAction","Apply or remove profile."],["UpDirective","`up` directive - apply a network profile."]],"trait":[["ProfileCliDirective","Entrypoint for profile CLI directives."]]});
