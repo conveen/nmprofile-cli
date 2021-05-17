@@ -44,11 +44,7 @@ pub fn up_wifi() {
     profile.up();
 }
 
-/// Wi-Fi radio CLI directive.
-///
-/// The `wifi` profile doesn't accept CL arguments, so
-/// [run](../../cli/trait.ProfileCliDirective.html#tymethod.run) simply creates an instance of
-/// [WiFiProfile](struct.WiFiProfile.html) and calls `up` or `down`.
+/// Wi-Fi radio.
 #[derive(StructOpt)]
 pub struct WiFiProfileDirective {}
 
