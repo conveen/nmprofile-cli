@@ -9,7 +9,7 @@ then
     echo "::: INFO: Running library and doc tests" && \
     cargo test --lib && cargo test --doc && \
     echo "::: INFO: Building code in release mode" && \
-    cargo build --release && \
+    cargo build --release
 else
     echo "::: ERROR: Failed to locate cargo executable"
     exit 1
