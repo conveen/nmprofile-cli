@@ -43,8 +43,7 @@ pub fn gen_ethernet_status() -> crate::error::Result<String> {
 /// thus return `true` for `connecting`.
 pub fn ethernet_is_connected() -> crate::error::Result<bool> {
     let ethernet_status = gen_ethernet_status()?;
-    Ok(ethernet_status == "connected".to_string()
-        || ethernet_status == "connecting".to_string())
+    Ok(ethernet_status == "connected".to_string() || ethernet_status == "connecting".to_string())
 }
 
 /// Status of the first `wifi` device.

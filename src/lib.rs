@@ -52,7 +52,7 @@
 //! ```
 //! // src/profiles/nord_vpn.rs
 //! use structopt::StructOpt;
-//! 
+//!
 //! use libnmprofile::cli::{ProfileAction, ProfileCliDirective};
 //! use libnmprofile::profile::{self, Profile};
 //! use libnmprofile::profiles::wifi::{down_wifi, up_wifi};
