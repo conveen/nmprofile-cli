@@ -139,7 +139,6 @@ impl DownDirective {
 #[doc(hidden)]
 #[derive(StructOpt)]
 #[structopt(
-    name = "network",
     author = "Conveen",
     version = env!("CARGO_PKG_VERSION"),
     setting=structopt::clap::AppSettings::ArgRequiredElseHelp,
