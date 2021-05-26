@@ -145,9 +145,19 @@ impl DownDirective {
     setting=structopt::clap::AppSettings::ArgRequiredElseHelp,
 )]
 pub enum Cli {
-    #[structopt(alias="u", name = "up")]
+    #[structopt(
+        alias = "u",
+        name = "up",
+        about = "Apply a network profile",
+        long_about = "",
+    )]
     Up(UpDirective),
-    #[structopt(alias="d", name = "down")]
+    #[structopt(
+        alias = "d",
+        name = "down",
+        about = "Remove a network profile",
+        long_about = "",
+    )]
     Down(DownDirective),
 }
 
