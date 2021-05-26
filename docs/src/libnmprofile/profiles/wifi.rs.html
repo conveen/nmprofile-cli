@@ -59,10 +59,6 @@
 <span id="56">56</span>
 <span id="57">57</span>
 <span id="58">58</span>
-<span id="59">59</span>
-<span id="60">60</span>
-<span id="61">61</span>
-<span id="62">62</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2021 Conveen</span>
 
@@ -110,11 +106,7 @@
     <span class="ident">profile</span>.<span class="ident">up</span>();
 }
 
-<span class="doccomment">/// Wi-Fi radio CLI directive.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The `wifi` profile doesn&#39;t accept CL arguments, so</span>
-<span class="doccomment">/// [run](../../cli/trait.ProfileCliDirective.html#tymethod.run) simply creates an instance of</span>
-<span class="doccomment">/// [WiFiProfile](struct.WiFiProfile.html) and calls `up` or `down`.</span>
+<span class="doccomment">/// Wi-Fi radio.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WiFiProfileDirective</span> {}
 

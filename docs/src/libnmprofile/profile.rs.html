@@ -103,7 +103,6 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
-<span id="103">103</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2021 Conveen</span>
 
@@ -150,8 +149,7 @@
 <span class="doccomment">/// thus return `true` for `connecting`.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ethernet_is_connected</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">error</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">ethernet_status</span> <span class="op">=</span> <span class="ident">gen_ethernet_status</span>()<span class="question-mark">?</span>;
-    <span class="prelude-val">Ok</span>(<span class="ident">ethernet_status</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;connected&quot;</span>.<span class="ident">to_string</span>()
-        <span class="op">|</span><span class="op">|</span> <span class="ident">ethernet_status</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;connecting&quot;</span>.<span class="ident">to_string</span>())
+    <span class="prelude-val">Ok</span>(<span class="ident">ethernet_status</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;connected&quot;</span>.<span class="ident">to_string</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">ethernet_status</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;connecting&quot;</span>.<span class="ident">to_string</span>())
 }
 
 <span class="doccomment">/// Status of the first `wifi` device.</span>
